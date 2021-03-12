@@ -1,0 +1,2 @@
+${AnsiColor.BLUE} SpringBoot的版本号: ${spring-boot.formatted-version}
+${AnsiColor.BRIGHT_RED} 正在启动《智慧路灯综合管理平台》应用!

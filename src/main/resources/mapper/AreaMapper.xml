@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javakc.islimp.modules.area.dao.AreaDao">
+
+    <!--
+        mybatis默认的二级缓存指定的是运行缓存 应用服务器运行时的内存空间
+        应用服务器启动时创建
+        应用服务器关闭时销毁
+
+        Redis 基于内存的key-value数据库
+
+        mybatis的二级缓存指定Redis
+    -->
+    <cache type="com.javakc.islimp.commons.mybatis.MybatisRedisCache"/>
+
+    <resultMap id="areaResultMap" type="Area">
+        <id property="id" column="id"/>
+        <result property="areaNum" column="area_num"/>
+        <result property="areaName" column="area_name"/>
+        <result property="areaLevel" column="area_level"/>
+        <result property="areaPlus" column="area_plus"/>
+        <association property="parent" column="pid" select="com.javakc.islimp.modules.area.dao.AreaDao.selectById"/>
+    </resultMap>
+
+    <insert id="insert">
+        insert into islimp_area_manage(area_num, area_name, area_level, pid, area_plus)
+            values(#{areaNum}, #{areaName}, #{areaLevel}, #{parent.id}, #{areaPlus})
+    </insert>
+
+    <update id="updateById">
+        update islimp_area_manage set area_num = #{et.areaNum}, area_name = #{et.areaName}, area_level = #{et.areaLevel},
+            pid = #{et.parent.id}, area_plus = #{et.areaPlus} where id = #{et.id}
+    </update>
+
+    <resultMap id="areaTreeMap" type="Map">
+        <result property="id" column="id"/>
+        <result property="name" column="area_name"/>
+        <collection property="children" javaType="List" column="id" select="com.javakc.islimp.modules.area.dao.AreaDao.selectAreaTree"/>
+    </resultMap>
+
+    <select id="selectAreaTree" resultMap="areaTreeMap" parameterType="int" useCache="false">
+        select id, area_name from islimp_area_manage where pid = #{id}
+    </select>
+
+</mapper>

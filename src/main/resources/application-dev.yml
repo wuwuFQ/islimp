@@ -1,0 +1,29 @@
+server:
+    port: 80
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/javakc83?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
+        username: root
+        password: 12345678
+    redis:
+        #哨兵配置
+        sentinel:
+            master: mymaster
+            nodes: 127.0.0.1:16379,127.0.0.1:16380,127.0.0.1:16381
+        #连接池配置
+        lettuce:
+            pool:
+                max-idle: 10
+                max-active: 20
+                min-idle: 5
+                max-wait: 10000ms
+        host: 127.0.0.1
+        port: 6379
+    devtools:
+        restart:
+            enabled: true
+mybatis-plus:
+    configuration:
+        #日志输出(仅开发环境)
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
